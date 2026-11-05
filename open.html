@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forex-Nyit')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <div class="container">
+        <div class="page-title">
+            <h1>Pozíció nyitása</h1>
+            <p>Piaci áras megbízás. Pozitív mennyiség: Long (vétel), negatív mennyiség: Short (eladás).</p>
+        </div>
+
+        <div th:replace="~{fragments/layout :: oandaMissing}"></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="panel">
+            <form th:action="@{/forex/open}" th:object="${form}" method="post" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="instrument" class="form-label">Instrumentum</label>
+                    <select id="instrument" class="form-select" th:field="*{instrument}">
+                        <option th:each="i : ${instruments}" th:value="${i}" th:text="${i}"></option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="units" class="form-label">Mennyiség (egység)</label>
+                    <input id="units" type="number" step="1" class="form-control" th:field="*{units}" required>
+                    <div class="form-text">pl. 100 = Long, -100 = Short</div>
+                </div>
+                <div class="col-md-3 d-grid">
+                    <button type="submit" class="btn btn-success" th:disabled="${!oandaConfigured}">Pozíció nyitása</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="alert alert-success" th:if="${fill}">
+            <h2 class="h5">A pozíció megnyílt</h2>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <tbody>
+                    <tr><th>tradeId</th><td class="fw-bold" th:text="${tradeId}"></td></tr>
+                    <tr><th>Instrumentum</th><td th:text="${fill.instrument}"></td></tr>
+                    <tr><th>Irány</th><td th:text="${direction}"></td></tr>
+                    <tr><th>Mennyiség</th><td th:text="${fill.units}"></td></tr>
+                    <tr><th>Nyitóár</th><td th:text="${fill.price}"></td></tr>
+                    <tr><th>Időpont (UTC)</th><td th:text="${#strings.replace(#strings.substring(fill.time.toString(), 0, 19), 'T', ' ')}"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <a class="btn btn-outline-primary btn-sm mt-3" th:href="@{/forex/positions}">Nyitott pozíciók megtekintése</a>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
