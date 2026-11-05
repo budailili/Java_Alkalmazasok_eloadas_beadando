@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forex-account')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <div class="container">
+        <div class="page-title">
+            <h1>Számlainformációk</h1>
+            <p>Az Oanda demo számla aktuális adatai.</p>
+        </div>
+
+        <div th:replace="~{fragments/layout :: oandaMissing}"></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="panel" th:if="${account}">
+            <div class="rate-strip mb-4">
+                <div><small>Egyenleg</small><strong th:text="${account.balance} + ' ' + ${account.currency}"></strong></div>
+                <div><small>NAV</small><strong th:text="${account.getNAV()} + ' ' + ${account.currency}"></strong></div>
+                <div><small>Nem realizált P/L</small><strong th:text="${account.unrealizedPL}"></strong></div>
+                <div><small>Szabad fedezet</small><strong th:text="${account.marginAvailable}"></strong></div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped mb-0">
+                    <tbody>
+                    <tr><th>Számlaazonosító</th><td th:text="${account.id}"></td></tr>
+                    <tr><th>Megnevezés</th><td th:text="${account.alias}"></td></tr>
+                    <tr><th>Pénznem</th><td th:text="${account.currency}"></td></tr>
+                    <tr><th>Létrehozva</th><td th:text="${#strings.replace(#strings.substring(account.createdTime.toString(), 0, 19), 'T', ' ')} + ' (UTC)'"></td></tr>
+                    <tr><th>Egyenleg</th><td th:text="${account.balance}"></td></tr>
+                    <tr><th>Nettó eszközérték (NAV)</th><td th:text="${account.getNAV()}"></td></tr>
+                    <tr><th>Realizált P/L (összes)</th><td th:text="${account.pl}"></td></tr>
+                    <tr><th>Nem realizált P/L</th><td th:text="${account.unrealizedPL}"></td></tr>
+                    <tr><th>Lekötött fedezet</th><td th:text="${account.marginUsed}"></td></tr>
+                    <tr><th>Szabad fedezet</th><td th:text="${account.marginAvailable}"></td></tr>
+                    <tr><th>Tőkeáttétel (margin rate)</th><td th:text="${account.marginRate}"></td></tr>
+                    <tr><th>Nyitott trade-ek</th><td th:text="${account.openTradeCount}"></td></tr>
+                    <tr><th>Nyitott pozíciók</th><td th:text="${account.openPositionCount}"></td></tr>
+                    <tr><th>Függő megbízások</th><td th:text="${account.pendingOrderCount}"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
