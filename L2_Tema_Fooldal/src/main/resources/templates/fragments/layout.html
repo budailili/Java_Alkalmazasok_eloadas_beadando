@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' | Árfolyam és Forex kliens'">Árfolyam és Forex kliens</title>
+    <!-- Téma: Bootswatch "Flatly" (MIT licenc) - https://bootswatch.com/flatly/ -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/flatly/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Árfolyam &amp; Forex</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Menü megnyitása">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${menu == 'home'} ? 'active'" th:href="@{/}">Főoldal</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:classappend="${menu == 'soap'} ? 'active'" th:href="@{/soap}">SOAP</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" th:classappend="${menu == 'forex'} ? 'active'" href="#"
+                       role="button" data-bs-toggle="dropdown" aria-expanded="false">Forex</a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" th:classappend="${submenu == 'account'} ? 'active'" th:href="@{/forex/account}">Forex-account</a></li>
+                        <li><a class="dropdown-item" th:classappend="${submenu == 'actual'} ? 'active'" th:href="@{/forex/actual-price}">Forex-AktÁr</a></li>
+                        <li><a class="dropdown-item" th:classappend="${submenu == 'hist'} ? 'active'" th:href="@{/forex/hist-price}">Forex-HistÁr</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" th:classappend="${submenu == 'open'} ? 'active'" th:href="@{/forex/open}">Forex-Nyit</a></li>
+                        <li><a class="dropdown-item" th:classappend="${submenu == 'positions'} ? 'active'" th:href="@{/forex/positions}">Forex-Poz</a></li>
+                        <li><a class="dropdown-item" th:classappend="${submenu == 'close'} ? 'active'" th:href="@{/forex/close}">Forex-Zár</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div th:fragment="oandaMissing" class="alert alert-warning" th:if="${oandaConfigured == false}">
+    Az Oanda hozzáférés nincs beállítva. Hozz létre egy <code>oanda.properties</code> fájlt a
+    <code>beadando.jar</code> mellé az <code>oanda.properties.example</code> minta alapján.
+</div>
+
+<footer th:fragment="footer" class="site-footer mt-auto">
+    <div class="container d-flex flex-column flex-md-row justify-content-between gap-2">
+        <span>Készítették: Budai Lili (GVLRPX) és Bácskai József Kristóf (GHX0DH)</span>
+        <span>Java alkalmazások – beadandó, 2026</span>
+    </div>
+</footer>
+
+<th:block th:fragment="scripts">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</th:block>
+
+</body>
+</html>

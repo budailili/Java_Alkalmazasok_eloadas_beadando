@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Főoldal')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<section class="hero">
+    <div class="container">
+        <h1>Devizaárfolyamok és Forex kereskedés egy helyen</h1>
+        <p class="mt-3">
+            Az alkalmazás a Magyar Nemzeti Bank hivatalos árfolyamait kérdezi le SOAP webszolgáltatáson
+            keresztül, és az Oanda demo számláján keresztül devizapárokkal lehet vele kereskedni.
+        </p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            <a class="btn btn-success btn-lg" th:href="@{/soap}">MNB árfolyamok lekérése</a>
+            <a class="btn btn-outline-light btn-lg" th:href="@{/forex/actual-price}">Aktuális Forex árak</a>
+        </div>
+    </div>
+</section>
+
+<main>
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="panel feature h-100">
+                    <h2>MNB árfolyam-lekérdezés (SOAP)</h2>
+                    <p>
+                        Válaszd ki a devizát és az időszakot, az alkalmazás lekéri az MNB hivatalos
+                        középárfolyamait, táblázatban megjeleníti és grafikonon ábrázolja őket.
+                    </p>
+                    <ul>
+                        <li>a devizalista közvetlenül az MNB-től érkezik</li>
+                        <li>minimum, maximum és átlag az időszakra</li>
+                        <li>vonaldiagram Chart.js segítségével</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel feature h-100">
+                    <h2>Forex kliens (Oanda v20 API)</h2>
+                    <p>
+                        A Forex menüben a demo számla adatai, az aktuális és historikus árak érhetők el,
+                        valamint piaci áron lehet pozíciót nyitni és zárni.
+                    </p>
+                    <ul>
+                        <li>számlainformációk és nyitott pozíciók</li>
+                        <li>aktuális vételi/eladási ár és spread</li>
+                        <li>az utolsó 10 historikus ár választható időegységgel</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel mt-4">
+            <h2 class="h5 mb-3">Menüpontok</h2>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <tbody>
+                    <tr><td><a th:href="@{/soap}">SOAP</a></td><td>MNB árfolyamok időszakra, táblázat és grafikon</td></tr>
+                    <tr><td><a th:href="@{/forex/account}">Forex-account</a></td><td>A demo számla adatai</td></tr>
+                    <tr><td><a th:href="@{/forex/actual-price}">Forex-AktÁr</a></td><td>Kiválasztott instrumentum aktuális ára</td></tr>
+                    <tr><td><a th:href="@{/forex/hist-price}">Forex-HistÁr</a></td><td>Az utolsó 10 historikus ár</td></tr>
+                    <tr><td><a th:href="@{/forex/open}">Forex-Nyit</a></td><td>Pozíció nyitása piaci áron (Long / Short)</td></tr>
+                    <tr><td><a th:href="@{/forex/positions}">Forex-Poz</a></td><td>Nyitott pozíciók táblázatban</td></tr>
+                    <tr><td><a th:href="@{/forex/close}">Forex-Zár</a></td><td>Pozíció zárása tradeId alapján</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <p class="text-muted small mt-3 mb-0">
+            Felhasznált technológiák: Java 25, Spring Boot, Thymeleaf, JAX-WS (MNB SOAP),
+            Oanda v20 Java kliens, Chart.js, Bootswatch Flatly téma.
+        </p>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
