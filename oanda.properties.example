@@ -1,0 +1,5 @@
+# Másold le oanda.properties néven, és töltsd ki a saját practice fiókod adataival.
+# Helye: a beadando.jar mellett (vagy fejlesztéskor a projekt főmappájában).
+oanda.url=https://api-fxpractice.oanda.com
+oanda.accountId=101-000-00000000-001
+oanda.token=IDE_JON_A_TOKEN
