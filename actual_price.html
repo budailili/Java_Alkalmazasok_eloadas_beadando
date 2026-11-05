@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forex-AktÁr')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <div class="container">
+        <div class="page-title">
+            <h1>Aktuális ár</h1>
+            <p>Válassz instrumentumot, és lekérjük az aktuális vételi és eladási árat.</p>
+        </div>
+
+        <div th:replace="~{fragments/layout :: oandaMissing}"></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="panel">
+            <form th:action="@{/forex/actual-price}" th:object="${form}" method="post" class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <label for="instrument" class="form-label">Instrumentum</label>
+                    <select id="instrument" class="form-select" th:field="*{instrument}">
+                        <option th:each="i : ${instruments}" th:value="${i}" th:text="${i}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-grid">
+                    <button type="submit" class="btn btn-primary" th:disabled="${!oandaConfigured}">Ár lekérése</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="panel" th:if="${price}">
+            <h2 class="h5 mb-3" th:text="${price.instrument}"></h2>
+            <div class="rate-strip mb-3">
+                <div><small>Bid (eladás)</small><strong th:text="${price.bids[0].price}"></strong></div>
+                <div><small>Ask (vétel)</small><strong th:text="${price.asks[0].price}"></strong></div>
+                <div><small>Középár</small><strong th:text="${#numbers.formatDecimal(mid, 1, 5)}"></strong></div>
+                <div><small>Spread</small><strong th:text="${#numbers.formatDecimal(spread, 1, 5)}"></strong></div>
+            </div>
+            <p class="text-muted small mb-0"
+               th:text="'Időpont: ' + ${#strings.replace(#strings.substring(price.time.toString(), 0, 19), 'T', ' ')} + ' (UTC), kereskedhető: ' + (${price.tradeable} ? 'igen' : 'nem')"></p>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
