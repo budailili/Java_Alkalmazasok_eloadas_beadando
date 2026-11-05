@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forex-HistÁr')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <div class="container">
+        <div class="page-title">
+            <h1>Historikus árak</h1>
+            <p>Az utolsó 10 gyertya árai a kiválasztott időegységgel (középár, OHLC).</p>
+        </div>
+
+        <div th:replace="~{fragments/layout :: oandaMissing}"></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="panel">
+            <form th:action="@{/forex/hist-price}" th:object="${form}" method="post" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="instrument" class="form-label">Instrumentum</label>
+                    <select id="instrument" class="form-select" th:field="*{instrument}">
+                        <option th:each="i : ${instruments}" th:value="${i}" th:text="${i}"></option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="granularity" class="form-label">Granularity</label>
+                    <select id="granularity" class="form-select" th:field="*{granularity}">
+                        <option value="M1">M1 – 1 perc</option>
+                        <option value="M5">M5 – 5 perc</option>
+                        <option value="M15">M15 – 15 perc</option>
+                        <option value="M30">M30 – 30 perc</option>
+                        <option value="H1">H1 – 1 óra</option>
+                        <option value="H4">H4 – 4 óra</option>
+                        <option value="D">D – napi</option>
+                        <option value="W">W – heti</option>
+                        <option value="M">M – havi</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-grid">
+                    <button type="submit" class="btn btn-primary" th:disabled="${!oandaConfigured}">Árak lekérése</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="panel" th:if="${candles}">
+            <h2 class="h5 mb-3" th:text="${form.instrument} + ', ' + ${form.granularity} + ' – utolsó 10 ár'"></h2>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th>Időpont (UTC)</th>
+                        <th class="num">Nyitó</th>
+                        <th class="num">Max</th>
+                        <th class="num">Min</th>
+                        <th class="num">Záró</th>
+                        <th class="num">Volumen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${candles}">
+                        <td>
+                            <span th:text="${#strings.replace(#strings.substring(c.time.toString(), 0, 16), 'T', ' ')}"></span>
+                            <span class="badge bg-secondary ms-1" th:unless="${c.complete}">folyamatban</span>
+                        </td>
+                        <td class="num" th:text="${c.mid.o}"></td>
+                        <td class="num" th:text="${c.mid.h}"></td>
+                        <td class="num" th:text="${c.mid.l}"></td>
+                        <td class="num fw-bold" th:text="${c.mid.c}"></td>
+                        <td class="num" th:text="${c.volume}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
