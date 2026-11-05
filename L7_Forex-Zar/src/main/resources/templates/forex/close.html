@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forex-Zár')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main>
+    <div class="container">
+        <div class="page-title">
+            <h1>Pozíció zárása</h1>
+            <p>Add meg a zárandó trade azonosítóját, a pozíció piaci áron zárul.</p>
+        </div>
+
+        <div th:replace="~{fragments/layout :: oandaMissing}"></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="panel">
+            <form th:action="@{/forex/close}" th:object="${form}" method="post" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="tradeId" class="form-label">tradeId</label>
+                    <input id="tradeId" type="number" min="1" step="1" class="form-control" th:field="*{tradeId}" required>
+                </div>
+                <div class="col-md-3 d-grid">
+                    <button type="submit" class="btn btn-danger" th:disabled="${!oandaConfigured}">Pozíció zárása</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="alert alert-success" th:if="${closedId}">
+            <h2 class="h5" th:text="'A(z) ' + ${closedId} + ' azonosítójú pozíció lezárva'"></h2>
+            <p class="mb-0" th:if="${fill}"
+               th:text="'Záróár: ' + ${fill.price} + ', realizált P/L: ' + ${fill.pl} + ', új egyenleg: ' + ${fill.accountBalance}"></p>
+        </div>
+
+        <div class="panel" th:if="${trades != null and !trades.isEmpty()}">
+            <h2 class="h6 mb-3">Nyitott trade-ek</h2>
+            <div class="table-responsive">
+                <table class="table table-sm table-hover mb-0">
+                    <thead>
+                    <tr><th>tradeId</th><th>Instrumentum</th><th class="num">Mennyiség</th><th class="num">Nem realizált P/L</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="t : ${trades}">
+                        <td class="fw-bold" th:text="${t.id}"></td>
+                        <td th:text="${t.instrument}"></td>
+                        <td class="num" th:text="${t.currentUnits}"></td>
+                        <td class="num" th:text="${t.unrealizedPL}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
